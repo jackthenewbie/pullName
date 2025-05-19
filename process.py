@@ -1,5 +1,37 @@
 import json
 from fetch import *
+import tkinter as tk
+
+# Function to show a prompt window and capture a key press
+def show_key_prompt(message):
+    key_pressed_result = None
+
+    root = tk.Tk()
+    root.withdraw() # Hide the main root window
+
+    dialog = tk.Toplevel(root)
+    dialog.title("Action Required")
+    dialog.geometry("300x100") # Set window size
+    dialog.attributes('-topmost', True) # Keep window on top
+
+    label = tk.Label(dialog, text=message, padx=10, pady=10)
+    label.pack(expand=True)
+
+    def on_key_press(event):
+        nonlocal key_pressed_result
+        key_pressed_result = event.char # Capture the character pressed
+        dialog.destroy() # Close the dialog window
+
+    # Bind the <Key> event to the dialog window
+    dialog.bind('<Key>', on_key_press)
+
+    # Set focus to the dialog window
+    dialog.focus_force()
+
+    # Start the Tkinter event loop for this dialog
+    root.mainloop() # This blocks until the dialog is destroyed
+
+    return key_pressed_result
 def json_from_response_of_text(text):
     ai_response = get_ai_response(text)
     extracted_json_string = None
